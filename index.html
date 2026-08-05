@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>סלובקיה 2026 · טיול משפחתי בליפטוב</title>
+  <meta name="description" content="מסלול, מפה ומידע מעשי לטיול המשפחתי בליפטוב, סלובקיה — 17–24 באוגוסט 2026.">
+  <meta name="theme-color" content="#0f766e">
+  <!-- אתר משפחתי פרטי — לא רוצים שיופיע בתוצאות חיפוש -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>">
+
+  <link rel="preconnect" href="https://maps.googleapis.com">
+  <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">🏔️</span>
+      <span class="brand__text">
+        <strong id="brandTitle">סלובקיה 2026</strong>
+        <small id="brandSub">טיול משפחתי בליפטוב</small>
+      </span>
+    </div>
+    <div class="countdown" id="countdown" aria-live="polite"></div>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="ניווט ראשי">
+    <button class="tab is-active" data-view="plan"><span aria-hidden="true">🗓️</span>מסלול</button>
+    <button class="tab" data-view="map"><span aria-hidden="true">🗺️</span>מפה</button>
+    <button class="tab" data-view="rain"><span aria-hidden="true">🌧️</span><i class="tab__long">תוכנית&nbsp;</i>גשם</button>
+    <button class="tab" data-view="info"><span aria-hidden="true">💡</span>מידע</button>
+    <button class="tab" data-view="list"><span aria-hidden="true">✅</span>צ׳קליסט</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ═══════════ מסלול ═══════════ -->
+  <section class="view is-active" id="view-plan">
+    <div class="wrap">
+      <div class="hero">
+        <h1>מסלול הטיול</h1>
+        <p class="hero__sub" id="heroSub"></p>
+        <ul class="factstrip" id="factstrip"></ul>
+      </div>
+
+      <div class="legend">
+        <span class="wbadge wbadge--scenic">תלוי נוף</span> — שמרו ליום בהיר ·
+        <span class="wbadge wbadge--rainproof">חסין גשם</span> — מתאים גם לגשם ·
+        <span class="wbadge wbadge--flex">גמיש</span>
+      </div>
+
+      <div id="days" class="days"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ מפה ═══════════ -->
+  <section class="view" id="view-map">
+    <div class="mapshell">
+      <aside class="mapside">
+        <div class="mapside__head">
+          <div>
+            <h2>נקודות על המפה</h2>
+            <p class="muted" id="poiCount"></p>
+          </div>
+          <button class="btn btn--sm mapside__close" id="mapsideClose">סגור ✕</button>
+        </div>
+        <div class="filters">
+          <div class="filters__row" id="dayFilters" role="group" aria-label="סינון לפי יום"></div>
+          <div class="filters__row" id="catFilters" role="group" aria-label="סינון לפי סוג"></div>
+        </div>
+        <ul class="poilist" id="poiList"></ul>
+      </aside>
+      <div class="mapcanvas">
+        <div id="map" role="application" aria-label="מפת נקודות העניין של הטיול"></div>
+        <div class="mapsetup" id="mapSetup" hidden></div>
+        <button class="mapside-toggle" id="mapsideToggle" aria-expanded="false">☰ רשימת נקודות</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ גשם ═══════════ -->
+  <section class="view" id="view-rain">
+    <div class="wrap">
+      <div class="hero">
+        <h1>תוכנית לימים גשומים</h1>
+      </div>
+      <div class="card card--principle">
+        <h2><span aria-hidden="true">🌦️</span> עיקרון מזג האוויר</h2>
+        <p id="rainPrinciple"></p>
+      </div>
+      <div id="rainOptions" class="rainopts"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ מידע ═══════════ -->
+  <section class="view" id="view-info">
+    <div class="wrap">
+      <div class="hero">
+        <h1>מידע מעשי</h1>
+      </div>
+      <div id="infoBlocks" class="infoblocks"></div>
+      <div class="card card--verify">
+        <h2><span aria-hidden="true">🔎</span> לאמת לפני הנסיעה</h2>
+        <p class="muted">לא כל הנתונים אומתו לתאריכים המדויקים. שווה לבדוק ישירות מול האתרים:</p>
+        <ul id="verifyList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ צ׳קליסט ═══════════ -->
+  <section class="view" id="view-list">
+    <div class="wrap">
+      <div class="hero">
+        <h1>צ׳קליסט לפני הנסיעה</h1>
+        <p class="hero__sub">הסימונים נשמרים במכשיר הזה בלבד.</p>
+      </div>
+      <div class="progress">
+        <div class="progress__bar"><span id="progressFill"></span></div>
+        <span class="progress__label" id="progressLabel"></span>
+        <button class="btn btn--ghost btn--sm" id="resetList">איפוס</button>
+      </div>
+      <div id="checklist" class="checkgroups"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>נבנה למשפחה · הנתונים מבוססים על מסמך המסלול ועל סיכום הטיול מיולי 2025 · המיקומים אומתו מול Google · בכל נקודה יש ניווט ב<strong>גוגל מפות</strong> וב<strong>Waze</strong></p>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
