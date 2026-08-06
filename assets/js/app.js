@@ -45,6 +45,20 @@
     flex: { label: 'גמיש', cls: 'flex' },
   };
 
+  /** תאריך היום לפי השעון המקומי (לא UTC — אחרת ישראל מקדימה ביום) */
+  function todayISO() {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
+  }
+
+  /** איפה אנחנו ביחס לטיול: לפני / באמצע (ואיזה יום) / אחרי */
+  function tripPhase() {
+    const iso = todayISO();
+    const day = T.days.find((d) => d.date === iso);
+    if (day) return { phase: 'during', day: day, iso: iso };
+    return { phase: iso < T.meta.start ? 'before' : 'after', day: null, iso: iso };
+  }
+
   const darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
 
   /* ══════════════════ מסלול נסיעה יומי בגוגל מפות ══════════════════ */
@@ -112,14 +126,7 @@
     $('#brandSub').textContent = T.meta.subtitle;
     $('#heroSub').textContent = `${fmtDate(T.meta.start)}–${fmtDate(T.meta.end)} באוגוסט 2026 · ${T.meta.people}`;
 
-    $('#factstrip').innerHTML = [
-      ['🏡', 'לינה', T.meta.base],
-      ['✈️', 'נחיתה והמראה', T.meta.airport + ' · 10:00'],
-      ['🕯️', 'שבת', '22/8 · בלינה, בלי נסיעה'],
-      ['🍽️', 'כשרות', 'להביא מהבית / קראקוב'],
-    ]
-      .map(([i, k, v]) => `<li><span aria-hidden="true">${i}</span> ${esc(k)}: <b>${esc(v)}</b></li>`)
-      .join('');
+    renderFactstrip();
 
     const el = $('#countdown');
     const today = new Date();
@@ -139,6 +146,126 @@
     }
   }
 
+  /** רצועת העובדות — מציגה איפה ישנים הלילה, לפי היום שבו נכנסים לאתר */
+  function renderFactstrip() {
+    const t = tripPhase();
+    const rows = [];
+
+    if (t.phase === 'during') {
+      const bed = t.day.sleep ? poiById[t.day.sleep] : null;
+      rows.push(
+        bed
+          ? ['🏡', 'הלילה ישנים ב', bed.local || bed.name]
+          : ['✈️', 'הלילה', 'טסים הביתה']
+      );
+      rows.push(['📍', `יום ${t.day.n} · ${fmtDate(t.day.date)}`, t.day.title]);
+    } else if (t.phase === 'before') {
+      rows.push(['🏡', 'לינה', T.meta.base]);
+      rows.push(['🌙', 'שבעה לילות', `${fmtDate(T.meta.start)} – ${fmtDate(T.days[6].date)}`]);
+    } else {
+      rows.push(['🏡', 'לינה', T.meta.base]);
+    }
+
+    $('#factstrip').innerHTML = rows
+      .map(([i, k, v]) => `<li><span aria-hidden="true">${i}</span> ${esc(k)}: <b>${esc(v)}</b></li>`)
+      .join('');
+  }
+
+  /* ══════════════════ מזג אוויר ══════════════════ */
+  /* Open-Meteo — ללא מפתח, ללא הרשמה, CORS פתוח. https://open-meteo.com */
+
+  /** קודי מזג אוויר של WMO → תיאור ואייקון */
+  const WMO = {
+    0: ['בהיר', '☀️'], 1: ['בהיר בעיקר', '🌤️'], 2: ['מעונן חלקית', '⛅'], 3: ['מעונן', '☁️'],
+    45: ['ערפל', '🌫️'], 48: ['ערפל קפוא', '🌫️'],
+    51: ['טפטוף קל', '🌦️'], 53: ['טפטוף', '🌦️'], 55: ['טפטוף חזק', '🌧️'],
+    56: ['טפטוף קפוא', '🌧️'], 57: ['טפטוף קפוא', '🌧️'],
+    61: ['גשם קל', '🌦️'], 63: ['גשם', '🌧️'], 65: ['גשם חזק', '🌧️'],
+    66: ['גשם קפוא', '🌧️'], 67: ['גשם קפוא חזק', '🌧️'],
+    71: ['שלג קל', '🌨️'], 73: ['שלג', '🌨️'], 75: ['שלג כבד', '❄️'], 77: ['גרגרי שלג', '🌨️'],
+    80: ['ממטרים קלים', '🌦️'], 81: ['ממטרים', '🌧️'], 82: ['ממטרים עזים', '⛈️'],
+    85: ['ממטרי שלג', '🌨️'], 86: ['ממטרי שלג כבדים', '❄️'],
+    95: ['סופת רעמים', '⛈️'], 96: ['סופת רעמים וברד', '⛈️'], 99: ['סופת רעמים וברד', '⛈️'],
+  };
+  const wmo = (c) => WMO[c] || ['—', '🌡️'];
+
+  const DOW_SHORT = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'שבת'];
+
+  /** לאיזה מיקום מציגים מזג אוויר: היעד המרכזי של היום, או אזור הטיול לפני שהוא מתחיל */
+  function weatherTarget() {
+    const t = tripPhase();
+    if (t.phase === 'during') {
+      const p = poiById[t.day.weatherAt] || poiById.lodging;
+      return { poi: p, title: p.name, sub: `יום ${t.day.n} · ${t.day.title}` };
+    }
+    return {
+      poi: poiById.lodging,
+      title: 'הרי הטטרה · ליפטוב',
+      sub: t.phase === 'before' ? 'מזג האוויר עכשיו באזור הטיול' : 'אזור הטיול',
+    };
+  }
+
+  async function renderWeather() {
+    const box = $('#weather');
+    const target = weatherTarget();
+
+    box.innerHTML = `<div class="wx__head"><span aria-hidden="true">🌡️</span> מזג אוויר</div>
+      <div class="wx__loading">טוען…</div>`;
+
+    const url =
+      'https://api.open-meteo.com/v1/forecast' +
+      `?latitude=${target.poi.lat}&longitude=${target.poi.lng}` +
+      '&current=temperature_2m,weather_code,apparent_temperature' +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
+      '&timezone=Europe%2FBratislava&forecast_days=4';
+
+    let data;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      data = await res.json();
+    } catch (_) {
+      box.innerHTML = `<div class="wx__head"><span aria-hidden="true">🌡️</span> מזג אוויר</div>
+        <div class="wx__err">לא הצלחנו לטעון את התחזית. צריך חיבור לאינטרנט.</div>`;
+      return;
+    }
+
+    const cur = data.current;
+    const dl = data.daily;
+    const [curTxt, curIcon] = wmo(cur.weather_code);
+
+    const days = dl.time
+      .slice(1)
+      .map((iso, i) => {
+        const k = i + 1;
+        const [, icon] = wmo(dl.weather_code[k]);
+        const d = new Date(iso + 'T12:00:00');
+        return `<li>
+          <span class="wx__d">${DOW_SHORT[d.getDay()]}</span>
+          <span class="wx__i" aria-hidden="true">${icon}</span>
+          <span class="wx__t">${Math.round(dl.temperature_2m_max[k])}°<i>${Math.round(dl.temperature_2m_min[k])}°</i></span>
+          <span class="wx__p">${dl.precipitation_probability_max[k]}%</span>
+        </li>`;
+      })
+      .join('');
+
+    box.innerHTML = `
+      <div class="wx__head"><span aria-hidden="true">🌡️</span> מזג אוויר</div>
+      <div class="wx__place">${esc(target.title)}</div>
+      <div class="wx__sub">${esc(target.sub)}</div>
+      <div class="wx__now">
+        <span class="wx__now-icon" aria-hidden="true">${curIcon}</span>
+        <span class="wx__now-temp">${Math.round(cur.temperature_2m)}°</span>
+        <span class="wx__now-txt">${esc(curTxt)}<i>מרגיש כמו ${Math.round(cur.apparent_temperature)}°</i></span>
+      </div>
+      <div class="wx__today">
+        היום ${Math.round(dl.temperature_2m_max[0])}° / ${Math.round(dl.temperature_2m_min[0])}°
+        · סיכוי גשם ${dl.precipitation_probability_max[0]}%
+      </div>
+      <ul class="wx__days">${days}</ul>
+      <div class="wx__credit">נתונים: Open-Meteo</div>`;
+  }
+
   /* ══════════════════ מסלול ══════════════════ */
 
   function poiLine(id) {
@@ -148,7 +275,7 @@
   }
 
   function renderDays() {
-    const todayISO = new Date().toISOString().slice(0, 10);
+    const today = todayISO();
 
     $('#days').innerHTML = T.days
       .map((d) => {
@@ -179,6 +306,28 @@
              </div>`
           : '';
 
+        const extras = (d.extras || []).length
+          ? `<div class="extras">
+               <h4>📌 גם באזור של היום הזה</h4>
+               <div class="extras__list">
+                 ${d.extras
+                   .map((id) => {
+                     const p = poiById[id];
+                     if (!p) return '';
+                     const c = T.categories[p.cat];
+                     return `<button class="extra" data-goto="${esc(p.id)}">
+                       <span class="extra__icon" aria-hidden="true">${c.icon}</span>
+                       <span class="extra__txt">
+                         <b>${esc(p.name)}</b>
+                         <i dir="ltr">${esc(p.local || '')}</i>
+                       </span>
+                     </button>`;
+                   })
+                   .join('')}
+               </div>
+             </div>`
+          : '';
+
         const route = dayRouteUrl(d);
         const routeBtn = route
           ? `<div class="dayroute">
@@ -189,7 +338,7 @@
           : '';
 
         return `
-        <article class="day${d.dow === 'שבת' ? ' is-shabbat' : ''}${d.date === todayISO ? ' is-today' : ''}" data-day="${d.n}">
+        <article class="day${d.dow === 'שבת' ? ' is-shabbat' : ''}${d.date === today ? ' is-today' : ''}" data-day="${d.n}">
           <button class="day__head" aria-expanded="false">
             <div class="day__num"><b>${d.n}</b><small>${esc(d.dow.replace('יום ', ''))}</small></div>
             <div class="day__main">
@@ -206,7 +355,7 @@
             </div>
             <div class="day__chev" aria-hidden="true">⌄</div>
           </button>
-          <div class="day__body"><div class="tl">${items}${alt}</div>${routeBtn}</div>
+          <div class="day__body"><div class="tl">${items}${alt}</div>${extras}${routeBtn}</div>
         </article>`;
       })
       .join('');
@@ -740,6 +889,7 @@
   renderRain();
   renderInfo();
   renderChecklist();
+  renderWeather();
 
   const initial = (location.hash || '#plan').slice(1);
   showView(['plan', 'map', 'rain', 'info', 'list'].includes(initial) ? initial : 'plan');

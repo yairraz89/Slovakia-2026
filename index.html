@@ -13,7 +13,8 @@
 
   <link rel="preconnect" href="https://maps.googleapis.com">
   <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- ?v= מכריח דפדפנים לטעון גרסה חדשה. העלו את המספר בכל שינוי בקבצים האלה. -->
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
 
@@ -43,10 +44,13 @@
   <!-- ═══════════ מסלול ═══════════ -->
   <section class="view is-active" id="view-plan">
     <div class="wrap">
-      <div class="hero">
-        <h1>מסלול הטיול</h1>
-        <p class="hero__sub" id="heroSub"></p>
-        <ul class="factstrip" id="factstrip"></ul>
+      <div class="hero hero--split">
+        <div class="hero__main">
+          <h1>מסלול הטיול</h1>
+          <p class="hero__sub" id="heroSub"></p>
+          <ul class="factstrip" id="factstrip"></ul>
+        </div>
+        <aside class="wx" id="weather" aria-live="polite"></aside>
       </div>
 
       <div class="legend">
@@ -135,8 +139,8 @@
   <p>נבנה למשפחה · הנתונים מבוססים על מסמך המסלול ועל סיכום הטיול מיולי 2025 · המיקומים אומתו מול Google · בכל נקודה יש ניווט ב<strong>גוגל מפות</strong> וב<strong>Waze</strong></p>
 </footer>
 
-<script src="assets/js/config.js"></script>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/config.js?v=3"></script>
+<script src="assets/js/data.js?v=3"></script>
+<script src="assets/js/app.js?v=3"></script>
 </body>
 </html>

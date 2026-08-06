@@ -90,10 +90,10 @@ const TRIP = {
     /* --- יום 2: יאסנה --- */
     {
       id: 'jasna',
-      name: 'רכבל יאסנה (תחנה תחתונה)',
-      local: 'Jasná — Biela púť',
-      lat: 48.96944, lng: 19.58431, cat: 'cablecar', days: [2],
-      desc: 'תחנת המוצא לרכבל אל פסגת צ׳ופוק. חניון גדול, מסעדות ושירותים.',
+      name: 'רכבל צ׳ופוק — תחנה תחתונה',
+      local: 'Chopok — departure station of the cable car, Jasná',
+      lat: 48.97066, lng: 19.58373, cat: 'cablecar', days: [2],
+      desc: 'תחנת המוצא לרכבל אל פסגת צ׳ופוק, ביאסנה. חניון גדול, מסעדות ושירותים.',
       tips: ['כרטיסים אונליין ב-gopass — לרוב זול יותר', 'קבוצה של 15+ — בקשו מחיר קבוצתי מראש'],
     },
     {
@@ -295,22 +295,75 @@ const TRIP = {
       desc: 'מקורה, ומתחבר יפה לנושא המערות של הטיול.',
     },
 
+    /* --- מקומות שהוספת מקישורי גוגל מפות (שובצו ליום הקרוב ביותר) --- */
+    {
+      id: 'harenda',
+      name: 'מזחלת הרים הרנדה',
+      local: 'Harenda Mountain Coaster, Zakopane',
+      lat: 49.32098, lng: 19.97977, cat: 'kids', days: [1],
+      desc: 'מזחלת הרים בזקופנה, כ-4 ק״מ בלבד מרכבל גובאלובקה. תוספת טבעית ליום הראשון אם נשארת אנרגיה אחרי הטיסה.',
+    },
+    {
+      id: 'koliba-panorama',
+      name: 'קוליבה פנורמה',
+      local: 'Koliba Panoráma',
+      lat: 49.18037, lng: 18.86945, cat: 'nature', days: [3],
+      desc: 'בקתת הרים עם תצפית באזור מאלה פאטרה, כ-17 ק״מ מנקיק יאנושיק. עצירה אפשרית בדרך חזרה.',
+    },
+    {
+      id: 'boating-strbske',
+      name: 'סירות באגם שטרבסקה פלסו',
+      local: 'Člnkovanie / Boating Štrbské Pleso',
+      lat: 49.11985, lng: 20.05884, cat: 'water', days: [4],
+      desc: 'השכרת סירות על האגם — בדיוק במקום שכבר מופיע במסלול כתוספת אפשרית ליום ד׳.',
+    },
+    {
+      id: 'lomnica-cablecar',
+      name: 'רכבל טטרנסקה לומניצה (קבינה A)',
+      local: 'Tatranská Lomnica — A-kabinka',
+      lat: 49.16599, lng: 20.26910, cat: 'cablecar', days: [4],
+      desc: 'תחנת המוצא של הרכבל אל סקלנטה פלסו ואל פסגת לומניצקי שטיט, כ-14 ק״מ מבכלדקה.',
+      tips: [
+        'מכאן מגיעים לפסלי הדובים והמגלשות בסקלנטה פלסו',
+        'לפסגת לומניצקי שטיט — מספר המקומות מוגבל, חובה להזמין מראש',
+        'בדרך חזרה למטה אפשר מאונטיין קארט (תלת אופן)',
+      ],
+    },
+    {
+      id: 'viktoria-gardens',
+      name: 'גני ויקטוריה ומבוך צ׳רטובה סקלה',
+      local: 'Viktóriine záhrady s bludiskom Čertova skala',
+      lat: 49.28984, lng: 20.69334, cat: 'kids', days: [4],
+      desc: 'גנים ומבוך מזרחית לבכלדקה, כ-28 ק״מ. אטרקציה רגועה שמתאימה לכל הגילאים.',
+    },
+    {
+      id: 'obri-v-raji',
+      name: 'OBRI V RAJI — מחצבת חוויה',
+      local: 'OBRI V RAJI, Zážitkový lom na Spiši',
+      lat: 48.87265, lng: 20.52473, cat: 'kids', days: [4],
+      desc: 'מחצבה שהוסבה לאתר חוויה באזור ספיש, מדרום־מזרח לטטרות.',
+      tips: [
+        '⚠️ רחוקה: כ-44 ק״מ משטרבסקה פלסו וכ-72 ק״מ מהלינה',
+        'לא תוספת לבכלדקה — זה יום נפרד בפני עצמו, שקלו להחליף בו את יום א׳ הגמיש',
+      ],
+    },
+
     /* --- בונוס: מהטיול של 2025 ומהפוסטים --- */
     {
       id: 'strbske',
       name: 'אגם שטרבסקה פלסו',
       local: 'Štrbské Pleso',
-      lat: 49.12049, lng: 20.06329, cat: 'nature', days: [],
-      bonus: true,
-      desc: 'אגם הררי יפהפה בטטרה הגבוהה, הקפה רגלית נוחה ואפשרות לסירות. שילוב טבעי עם יום בכלדקה או עם יום בטטרה הגבוהה.',
+      lat: 49.12049, lng: 20.06329, cat: 'nature', days: [4],
+      desc: 'אגם הררי יפהפה בטטרה הגבוהה, הקפה רגלית נוחה ואפשרות לסירות. שילוב טבעי עם יום בכלדקה.',
     },
     {
       id: 'hrebienok',
-      name: 'מפלי המים הקרים / הרביינוק',
-      local: 'Hrebienok, Starý Smokovec',
-      lat: 49.15851, lng: 20.22492, cat: 'nature', days: [],
-      bonus: true,
-      desc: 'עולים בפוניקולר מסטארי סמוקובץ׳ לתחנת הרביינוק, ומשם מסלול של כ-3 ק״מ (אדום ואז ירוק חזרה) עם מפלים מרשימים.',
+      name: 'הרביינוק ומפלי המים הקרים',
+      local: 'Vysoké Tatry — Hrebienok',
+      lat: 49.15851, lng: 20.22492, cat: 'nature', days: [4],
+      driveTo: 'illusions-smokovec',
+      desc: 'עולים בפוניקולר מסטארי סמוקובץ׳ לתחנת הרביינוק, ומשם מסלול של כ-3 ק״מ (אדום ואז ירוק חזרה) עם מפלים מרשימים. כ-12 ק״מ משטרבסקה פלסו.',
+      tips: ['מגיעים ברכב לסטארי סמוקובץ׳ ומשם בפוניקולר — לא נוסעים עד למעלה'],
     },
     {
       id: 'skalnate',
@@ -365,6 +418,9 @@ const TRIP = {
       n: 1, date: '2026-08-17', dow: 'יום ב׳',
       title: 'נחיתה + זקופנה בדרך',
       weather: 'flex',
+      sleep: 'lodging',
+      weatherAt: 'gubalowka',
+      extras: ['harenda'],
       drive: 'כ-2 שעות לזקופנה · כ-1.5 שעות ללינה',
       summary: 'נוחתים, אוספים רכבים ועוצרים בזקופנה לפריקת אנרגיה לפני שממשיכים לבית.',
       items: [
@@ -379,6 +435,8 @@ const TRIP = {
       n: 2, date: '2026-08-18', dow: 'יום ג׳',
       title: 'צ׳ופוק + מזחלת ההרים',
       weather: 'scenic',
+      sleep: 'lodging',
+      weatherAt: 'chopok',
       drive: 'הכל בטווח 15 דקות מהבית',
       summary: 'הפסגה הגדולה בבוקר, ואטרקציות ליד הבית אחרי הצהריים. יום קל לוגיסטית עם תמורה עצומה.',
       items: [
@@ -391,6 +449,9 @@ const TRIP = {
       n: 3, date: '2026-08-19', dow: 'יום ד׳',
       title: 'נקיק יאנושיק',
       weather: 'scenic',
+      sleep: 'lodging',
+      weatherAt: 'janosikove',
+      extras: ['koliba-panorama'],
       drive: 'כ-1.5 שעות לכל כיוון',
       summary: 'המסלול המרהיב של הטיול — גשרוני עץ וסולמות מעל נחל זורם. יש גם חלופה נינוחה יותר לאותו יום.',
       items: [
@@ -408,6 +469,9 @@ const TRIP = {
       n: 4, date: '2026-08-20', dow: 'יום ה׳',
       title: 'הליכת צמרות בכלדקה — היום הגדול',
       weather: 'scenic',
+      sleep: 'lodging',
+      weatherAt: 'bachledka',
+      extras: ['boating-strbske', 'lomnica-cablecar', 'hrebienok', 'viktoria-gardens', 'obri-v-raji'],
       drive: 'כ-1.5 שעות — הנסיעה הארוכה בטיול',
       summary: 'טיול יום לטטרה הגבוהה. שביל צמרות, מגדל תצפית של 32 מ׳, ומגלשה ספירלית בדרך חזרה.',
       items: [
@@ -421,6 +485,8 @@ const TRIP = {
       n: 5, date: '2026-08-21', dow: 'יום ו׳',
       title: 'מערת החופש · חזרה ב-14:00',
       weather: 'rainproof',
+      sleep: 'lodging',
+      weatherAt: 'sloboda',
       drive: '10 דקות מהלינה',
       summary: 'יום קצר וקרוב לבית — מערה בבוקר, קניות אם נשאר זמן, וחזרה מוקדמת להתארגנות שבת.',
       items: [
@@ -434,6 +500,8 @@ const TRIP = {
       n: 6, date: '2026-08-22', dow: 'שבת',
       title: 'שבת בלינה — בלי נסיעה',
       weather: 'flex',
+      sleep: 'lodging',
+      weatherAt: 'lodging',
       drive: 'ללא נסיעה',
       noRoute: true,
       summary: 'יום מנוחה באוויר הרים. אם מזג האוויר מאפשר — הליכות קלות ברגל מהבית.',
@@ -447,6 +515,8 @@ const TRIP = {
       n: 7, date: '2026-08-23', dow: 'יום א׳',
       title: 'יום גמיש — ולישון מוקדם',
       weather: 'flex',
+      sleep: 'lodging',
+      weatherAt: 'liptovska-mara',
       drive: '15 דקות מהלינה',
       summary: 'היום הגמיש של הטיול: אגם, חזרה לאטרקציה אהובה, או פארק המים אם עוד לא היה יום גשום.',
       items: [
@@ -460,6 +530,8 @@ const TRIP = {
       n: 8, date: '2026-08-24', dow: 'יום ב׳',
       title: 'יציאה מוקדמת לטיסה',
       weather: 'flex',
+      sleep: null,
+      weatherAt: 'lodging',
       drive: 'כ-3.5 שעות לקראקוב',
       summary: 'יציאה לפנות בוקר. הכל צריך להיות ארוז ומוכן מאתמול בלילה.',
       items: [
